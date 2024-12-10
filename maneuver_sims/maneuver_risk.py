@@ -50,4 +50,4 @@ def compute_risk(original_risk, delta_v_vector, initial_cov_matrix, initial_r):
 
     updated_risk = compute_collision_probability(relative_position, cov_rel, 10)
 
-    return updated_risk
+    return updated_risk * original_risk

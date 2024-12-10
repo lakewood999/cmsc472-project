@@ -19,7 +19,7 @@ def update_covariance_with_vector(cov_matrix, delta_v_vector):
     """
     # conservative scaling factor for velocity uncertainty
     # since we want to yield final obs, which tend to be more certain since it's measured close to
-    # TCA, use a small value of like 5%
+    # TCA, use a small value of like 5% (random guess but idk)
     velocity_uncertainty_scale = 0.05  
 
     delta_v_magnitude = np.linalg.norm(delta_v_vector)
@@ -27,7 +27,7 @@ def update_covariance_with_vector(cov_matrix, delta_v_vector):
     if delta_v_magnitude > 0:
         delta_v_unit = delta_v_vector / delta_v_magnitude
     else:
-        delta_v_unit = np.zeros_like(delta_v_vector)  # No direction if no burn
+        delta_v_unit = np.zeros_like(delta_v_vector)  
 
     # velocity covariance - noise aligned with the delta V direction
     Q_velocity = velocity_uncertainty_scale**2 * delta_v_magnitude**2 * np.outer(delta_v_unit, delta_v_unit)
@@ -36,8 +36,7 @@ def update_covariance_with_vector(cov_matrix, delta_v_vector):
     P_velocity_updated = P_velocity + Q_velocity    # add process noise
 
 
-    P_cross = cov_matrix[:3, 3:]  # top right of covariance (3x3)
-
+    P_cross = cov_matrix[:3, 3:]  
     coupling_factor = 0.1  # assume some small conservative coupling factor
     P_cross_updated = P_cross + coupling_factor * Q_velocity  
 
@@ -59,8 +58,7 @@ if "__name__" == "__main__":
 
     # no cross-covariance between position and velocity
     initial_cov_matrix = np.eye(6)  
-    delta_v_example_vector = np.array([0.1, 0.2, 0.3])  # Example delta-V vector (m/s)
+    delta_v_example_vector = np.array([0.1, 0.2, 0.3])  # m/s
 
-    # Calculate updated covariance matrix
     updated_cov_matrix_vector = update_covariance_with_vector(initial_cov_matrix, delta_v_example_vector)
-    updated_cov_matrix_vector
+    print(updated_cov_matrix_vector)
